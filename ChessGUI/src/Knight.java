@@ -1,21 +1,24 @@
 import java.awt.image.BufferedImage;
 
-public class Knight extends ChessPiece{
+public class Knight extends ChessPiece {
 
     public Knight(BufferedImage im, boolean tm, Square lc) {//Constructor
         super(im, tm, lc);
     }
 
-    public boolean isMoveLegal(Square dest) {//move legal for a knight allows it to move like a knight
-        dc=Math.abs(loc.getCol()-dest.getCol());
-        dr=Math.abs(loc.getRow()-dest.getRow());
-        if((dest.getChessPiece()!=null && dest.getChessPiece().getColor()==loc.getChessPiece().getColor()))//not allowed to kill teamates
+    public boolean isMoveLegal(Square dest) {
+        delta_col = Math.abs(loc.getCol() - dest.getCol());
+        delta_row = Math.abs(loc.getRow() - dest.getRow());
+
+        //can't attack your own team
+        if ((dest.getChessPiece() != null && dest.getChessPiece().getTeam() == team))
             return false;
-        if((dc==2&&dr==1)||(dc==1&&dr==2))//the movement for a knight that is acceptable
-            return true;
-        else//those that are not
-            return false;
+
+        //any 2-1 move is legal
+        return ((delta_col == 2 && delta_row == 1) || (delta_col == 1 && delta_row == 2));
     }
 
-    public boolean isKing() { return false; }
+    public boolean isKing() {
+        return false;
+    }
 }

@@ -1,39 +1,59 @@
 import java.awt.image.BufferedImage;
 
-public class Pawn extends ChessPiece{
+public class Pawn extends ChessPiece {
 
     public Pawn(BufferedImage im, boolean tm, Square lc) {//Constructor
         super(im, tm, lc);
     }
 
-    public boolean isMoveLegal(Square dest) {//move legal for a pawn allows it to move like a pawn
-        dr=loc.getRow()-dest.getRow();
-        dc=loc.getCol()-dest.getCol();
-        if(loc.getBoard().blocked(loc,dest)==false)//checks if blocked
+    public boolean isMoveLegal(Square dest) {
+        delta_row = loc.getRow() - dest.getRow();
+        delta_col = loc.getCol() - dest.getCol();
+
+        //checks if the piece is blocked
+        if (!loc.getBoard().blocked(loc, dest))
             return false;
-        if((dest.getChessPiece()!=null && dest.getChessPiece().getColor()==loc.getChessPiece().getColor()))//no killing own team
+
+        //can't attack your own team
+        if ((dest.getChessPiece() != null && dest.getChessPiece().getTeam() == team))
             return false;
-        if(team==false){//bottom
-            if(loc.getRow()==6 && dest.isPiece())//if it has never moved and there is a piece to kill
-                return(dr==1&&Math.abs(dc)==1);//then it can kill diagonally
-            if(loc.getRow()==6)//if it has never moved
-                return ((dr==1||dr==2)&& dc==0);//then it can move one or two
-            else if(dest.isPiece())//if there is a piece in the destination
-                return(dr==1&&Math.abs(dc)==1);//move diagonally to kill it
-            else
-                return (dr==1) && dc==0;//otherwise move only one
+
+        //bottom pawns
+        if (!team) {
+            //if it has never moved and there is a piece to kill, it can move diagonally
+            if (loc.getRow() == 6 && dest.isPiece())
+                return (delta_row == 1 && Math.abs(delta_col) == 1);
+
+            //if it has never moved it can jump one or two
+            if (loc.getRow() == 6)
+                return ((delta_row == 1 || delta_row == 2) && delta_col == 0);
+
+            //if there is a piece in the attack spot, move diagonally
+            if (dest.isPiece())
+                return (delta_row == 1 && Math.abs(delta_col) == 1);
+
+            return (delta_row == 1 && delta_col == 0);
         }
-        else{//top
-            if(loc.getRow()==1 && dest.isPiece())//if it has never moved and there is a piece to kill
-                return(dr==-1&&Math.abs(dc)==1);//then it can kill diagonally
-            if(loc.getRow()==1)//if it has never moved
-                return (dr==-1||dr==-2)&& dc==0;//then it can move one or two
-            else if(dest.isPiece())//if there is a piece in the destination
-                return(dr==-1&&Math.abs(dc)==1);//move diagonally to kill it
-            else
-                return (dr==-1)&& dc==0;//otherwise move only one
+
+        //top pawns
+        else {
+            //if it has never moved and there is a piece to kill, then it can move diagonally
+            if (loc.getRow() == 1 && dest.isPiece())
+                return (delta_row == -1 && Math.abs(delta_col) == 1);
+
+            //if it has never moved, it can jump one or two
+            if (loc.getRow() == 1)
+                return (delta_row == -1 || delta_row == -2) && delta_col == 0;
+
+            //if there is a piece in the destination, then it can move diagonally
+            if (dest.isPiece())
+                return (delta_row == -1 && Math.abs(delta_col) == 1);
+
+            return (delta_row == -1) && delta_col == 0;
         }
     }
 
-    public boolean isKing() { return false; }
+    public boolean isKing() {
+        return false;
+    }
 }

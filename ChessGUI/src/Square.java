@@ -1,76 +1,88 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.*;
 
-public class Square extends JPanel implements MouseListener{
-    //private member variables
-    private JPanel colorPane;
-    protected Color paint;
+public class Square extends JPanel implements MouseListener {
     public static GameBoard board;
+    public boolean highlighted = false;
+    private Color paint;
+    private ChessPiece piece;
     private int row, col;
-    private Color OC;
-    protected ChessPiece piece;
-    private boolean first=false;
-    public boolean highlighted=false;
 
-    public Square(int r, int c, Color p){//construtor
-        row=r;
-        col=c;
-        paint=p;
-        this.setBackground(p);
-        this.addMouseListener(this);
+    public Square(int r, int c, Color p) {
+        row = r;
+        col = c;
+        paint = p;
+        setBackground(p);
+        addMouseListener(this);
     }
-    //accesors
-    public int getRow(){return row;}
-    public int getCol(){return col;}
-    public Color getColour(){return paint;}
 
-    public void mouseClicked(MouseEvent e) {}//i dont use this
+    public int getRow() {
+        return row;
+    }
 
-    public void mouseEntered(MouseEvent e) {//when the mouse enters the color of the square changes
-        this.setBackground(Color.BLUE);//makes it blue
+    public int getCol() {
+        return col;
     }
-    public void setBackground(Color e){//sets the background of the square
-        if(!highlighted)//if its not highlighted
-            super.setBackground(e);//then restore the background
+
+    public void mouseClicked(MouseEvent e) {
     }
-    public void mouseExited(MouseEvent e) {//when mouse leaves the square
-        this.setBackground(paint);//then the background should change back
+
+    //If the mouse is hovering over the square, color it blue
+    public void mouseEntered(MouseEvent e) {
+        setBackground(Color.BLUE);
     }
+
+    //Colors the square
+    public void setBackground(Color e) {
+        if (!highlighted)
+            super.setBackground(e);
+    }
+
+    //Returns the color of the square to the default when the mouse leaves the square
+    public void mouseExited(MouseEvent e) {
+        restore();
+    }
+
     //override paintComponent
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(piece != null)
+        if (piece != null)
             piece.draw(g);
     }
 
-    public void mousePressed(MouseEvent e) {//used so when you press the mouse it will count instead of click
-        board.clicked(this);//tells the board its been clicked
+    //Calls GameBoard's clicked function if the mouse is pressed
+    public void mousePressed(MouseEvent e) {
+        board.clicked(this);
     }
 
-    public void mouseReleased(MouseEvent e) {}//not used
-
-    public void setPiece(ChessPiece chessPiece) {//sets the piece on a square
-        piece=chessPiece;
-        this.repaint();
+    public void mouseReleased(MouseEvent e) {
     }
-    public ChessPiece getChessPiece(){//gets the chess piece
+
+    public ChessPiece getChessPiece() {
         return piece;
     }
-    public boolean isPiece(){//if there is piece
-        return piece!=null;
+
+    public boolean isPiece() {
+        return piece != null;
     }
-    public String toString(){//toString to help out
-        return "("+row+","+col+")";
+
+    //Place a piece on a square
+    public void setPiece(ChessPiece chessPiece) {
+        piece = chessPiece;
+        repaint();
     }
-    public GameBoard getBoard(){//accesing game board
+
+    public String toString() {
+        return "(" + row + "," + col + ")";
+    }
+
+    public GameBoard getBoard() {
         return board;
     }
-    public boolean equals(Square other){
-        return row==other.row && col==other.col;
-    }
-    public void restore(){
-        this.setBackground(paint);
+
+    public void restore() {
+        setBackground(paint);
     }
 }

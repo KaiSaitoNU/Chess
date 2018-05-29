@@ -1,21 +1,28 @@
 import java.awt.image.BufferedImage;
 
-public class Queen extends ChessPiece{
+public class Queen extends ChessPiece {
 
-    public Queen(BufferedImage im, boolean tm, Square lc) {//Constructor
+    public Queen(BufferedImage im, boolean tm, Square lc) {
         super(im, tm, lc);
     }
 
-    public boolean isMoveLegal(Square dest){//move legal for a queen allows it to move like a queen
-        Rook r = new Rook(null, team, loc);//make a rook
-        Bishop b = new Bishop(null, team, loc);//make a bishop
-        if(loc.getBoard().blocked(loc,dest)==false)//check if blocked
+    public boolean isMoveLegal(Square dest) {
+        Rook r = new Rook(null, team, loc);
+        Bishop b = new Bishop(null, team, loc);
+
+        //checks if piece is blocked
+        if (!loc.getBoard().blocked(loc, dest))
             return false;
-        if((dest.getChessPiece()!=null && dest.getChessPiece().getColor()==loc.getChessPiece().getColor()))//no killing own team
+
+        //can't attack your own team
+        if ((dest.getChessPiece() != null && dest.getChessPiece().getTeam() == team))
             return false;
-        return (b.isMoveLegal(dest)||r.isMoveLegal(dest))&&(dest!=loc);//moves like a rook and bishop
+
+        //queens moves like a rook-bishop hybrid
+        return (b.isMoveLegal(dest) || r.isMoveLegal(dest)) && (dest != loc);
     }
 
-    public boolean isKing() { return false; }
-
+    public boolean isKing() {
+        return false;
+    }
 }
