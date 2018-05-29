@@ -1,26 +1,31 @@
 import java.awt.image.BufferedImage;
 
-public class King extends ChessPiece{
+public class King extends ChessPiece {
 
     public King(BufferedImage im, boolean tm, Square lc) {//Constructor
         super(im, tm, lc);
     }
 
-    public boolean isMoveLegal(Square dest) {//move legal for a king allows it to move like a king
-        dc=loc.getCol()-dest.getCol();
-        dr=loc.getRow()-dest.getRow();
-        dc=Math.abs(dc);
-        dr=Math.abs(dr);
-        if(loc.getBoard().blocked(loc,dest)==false)//checks if blocked
+    public boolean isMoveLegal(Square dest) {
+        delta_col = Math.abs(loc.getCol() - dest.getCol());
+        delta_row = Math.abs(loc.getRow() - dest.getRow());
+
+        //checks if piece is blocked
+        if (!loc.getBoard().blocked(loc, dest))
             return false;
-        if((dest.getChessPiece()!=null && dest.getChessPiece().getColor()==loc.getChessPiece().getColor()))//no killing own team
+
+        //can't attack your own team
+        else if ((dest.getChessPiece() != null && dest.getChessPiece().getTeam() == team))
             return false;
-        if((dc>1||dr>1)||(dest==loc))//returns false if moved too far
+
+        //returns false if you don't choose a surrounding square
+        if ((delta_col > 1 || delta_row > 1) || (dest == loc))
             return false;
-        else//otherwise it allows the move
-            return true;
+
+        return true;
     }
-    public boolean isKing(){
+
+    public boolean isKing() {
         return true;
     }
 }
